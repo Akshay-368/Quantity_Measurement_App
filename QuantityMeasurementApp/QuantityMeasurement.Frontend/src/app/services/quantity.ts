@@ -13,7 +13,7 @@ providedIn:'root'
 
 export class QuantityService{
 
-private api='/api/quantity';
+private api = 'https://quantity-backend.onrender.com/api/quantity';
 
 constructor(
 
