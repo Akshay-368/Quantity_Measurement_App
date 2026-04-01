@@ -15,21 +15,23 @@ export class AuthService {
     private router: Router
   ) {}
 
-  login(username: string, password: string): Observable<string> {
-    return this.http.post(
-      `${this.apiBase}/auth/login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
-      {},
-      { responseType: 'text', headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
-    );
-  }
+// auth.ts — login()
+login(username: string, password: string): Observable<string> {
+  return this.http.post(
+    `${this.apiBase}/auth/login`,
+    { username, password },   // ← send as JSON body
+    { responseType: 'text', headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
+  );
+}
 
-  register(username: string, password: string): Observable<string> {
-    return this.http.post(
-      `${this.apiBase}/auth/register?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
-      {},
-      { responseType: 'text', headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
-    );
-  }
+// Same for register()
+register(username: string, password: string): Observable<string> {
+  return this.http.post(
+    `${this.apiBase}/auth/register`,
+    { username, password },   // ← send as JSON body
+    { responseType: 'text', headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
+  );
+}
 
   saveToken(token: string, username: string): void {
     if (!this.hasStorage()) {
