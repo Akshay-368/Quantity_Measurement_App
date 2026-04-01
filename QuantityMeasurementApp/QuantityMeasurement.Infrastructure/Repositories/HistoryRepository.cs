@@ -47,13 +47,33 @@ public class HistoryRepository : IHistoryRepository
         await _db.SaveChangesAsync();
 
         // Invalidation of cache after write opertaion
-        await _cache.RemoveAsync(HistoryCacheKey);
+        // await _cache.RemoveAsync(HistoryCacheKey);
+        try
+        {
+            await _cache.RemoveAsync(HistoryCacheKey);
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine($"Cache invalidation failed: {ex.Message}");
+            // Redis failure should NEVER break business logic
+            // Just ignore cache invalidation failure
+        }
     }
 
     public async Task<List<HistoryRecord>> GetHistoryAsync()
     {
         // Try first to get from cache
-        var cachedHistory = await _cache.GetAsync(HistoryCacheKey);
+        byte[] cachedHistory = null;
+        try
+        {
+            cachedHistory = await _cache.GetAsync(HistoryCacheKey);
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine($"Cache retrieval failed: {ex.Message}");
+            // Redis failure should NEVER break business logic
+            // Just ignore cache retrieval failure and fall back to DB read
+        }
         if (cachedHistory != null)
         {
             var cachedJson = Encoding.UTF8.GetString(cachedHistory);
@@ -88,7 +108,15 @@ public class HistoryRepository : IHistoryRepository
         
         // Also store it in cache for future use
         var json = JsonSerializer.Serialize(historyList);
+        try{
         await _cache.SetAsync(HistoryCacheKey , Encoding.UTF8.GetBytes(json), CacheOptions);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Cache set failed: {ex.Message}");
+            // Redis failure should NEVER break business logic
+            // Just ignore cache set failure
+        }
 
         return historyList; // after saving it in cache safely now return it
     }
@@ -100,6 +128,15 @@ public class HistoryRepository : IHistoryRepository
         await _db.SaveChangesAsync();
 
         // Also invalidate or clear the cache as well
-        await _cache.RemoveAsync(HistoryCacheKey);
+        try
+        {
+            await _cache.RemoveAsync(HistoryCacheKey);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Cache clear failed: {ex.Message}");
+            // Redis failure should NEVER break business logic
+            // Just ignore cache clear failure
+        }
     }
 }
