@@ -21,6 +21,12 @@ if (apiBaseUrl) {
     secure: true,
     xfwd: true,
   }));
+} else {
+  app.use('/api', (_req, res) => {
+    res.status(500).json({
+      error: 'Frontend proxy misconfigured: API_BASE_URL is missing',
+    });
+  });
 }
 
 /**
