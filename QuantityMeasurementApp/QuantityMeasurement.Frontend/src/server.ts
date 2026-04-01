@@ -1,8 +1,8 @@
 import {
-    AngularNodeAppEngine,
-    createNodeRequestHandler,
-    isMainModule,
-    writeResponseToNodeResponse,
+  AngularNodeAppEngine,
+  createNodeRequestHandler,
+  isMainModule,
+  writeResponseToNodeResponse,
 } from '@angular/ssr/node';
 import express from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
@@ -16,11 +16,16 @@ const apiBaseUrl = (process.env['API_BASE_URL'] ?? '').trim().replace(/\/+$/, ''
 
 if (apiBaseUrl) {
   console.log(`[SSR] API proxy enabled -> ${apiBaseUrl}`);
-  app.use('/api', createProxyMiddleware({
+  app.use('/api', createProxyMiddleware({ 
     target: apiBaseUrl,
     changeOrigin: true,
     secure: true,
     xfwd: true,
+    on: {
+      error: (err) => {
+        console.error('[SSR] API proxy error:', err.message);
+      },
+    },
   }));
 } else {
   console.error('[SSR] API proxy disabled: API_BASE_URL is missing');
