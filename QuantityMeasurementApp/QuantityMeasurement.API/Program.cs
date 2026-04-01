@@ -63,7 +63,8 @@ builder.Services.AddCors(options =>
                 return origin.StartsWith("http://localhost", StringComparison.OrdinalIgnoreCase)
                        || origin.StartsWith("https://localhost", StringComparison.OrdinalIgnoreCase)
                        || origin.StartsWith("http://127.0.0.1", StringComparison.OrdinalIgnoreCase)
-                       || origin.StartsWith("https://127.0.0.1", StringComparison.OrdinalIgnoreCase);
+                       || origin.StartsWith("https://127.0.0.1", StringComparison.OrdinalIgnoreCase)
+                       || origin.StartsWith("https://quantity-frontend.onrender.com", StringComparison.OrdinalIgnoreCase);
             });
         }
         else

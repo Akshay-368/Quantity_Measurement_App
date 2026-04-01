@@ -15,6 +15,7 @@ const angularApp = new AngularNodeAppEngine();
 const apiBaseUrl = (process.env['API_BASE_URL'] ?? '').trim().replace(/\/+$/, '');
 
 if (apiBaseUrl) {
+  console.log(`[SSR] API proxy enabled -> ${apiBaseUrl}`);
   app.use('/api', createProxyMiddleware({
     target: apiBaseUrl,
     changeOrigin: true,
@@ -22,6 +23,7 @@ if (apiBaseUrl) {
     xfwd: true,
   }));
 } else {
+  console.error('[SSR] API proxy disabled: API_BASE_URL is missing');
   app.use('/api', (_req, res) => {
     res.status(500).json({
       error: 'Frontend proxy misconfigured: API_BASE_URL is missing',
