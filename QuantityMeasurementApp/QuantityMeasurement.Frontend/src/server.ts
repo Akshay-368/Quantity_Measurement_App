@@ -16,11 +16,6 @@ const apiBaseUrl = (process.env['API_BASE_URL'] ?? '').trim().replace(/\/+$/, ''
 
 if (apiBaseUrl) {
   console.log(`[SSR] API proxy enabled -> ${apiBaseUrl}`);
-  // 🔥 DEBUG: log every /api request
-  app.use('/api', (req, res, next) => {
-    console.log(`[PROXY HIT] ${req.method} ${req.url}`);
-    next();
-  });
   app.use('/api', createProxyMiddleware({ 
     target: apiBaseUrl,
     changeOrigin: true,
@@ -28,12 +23,6 @@ if (apiBaseUrl) {
     xfwd: true,
     on: {
       error: (err) => {
-        proxyReq: (proxyReq, req) => {
-        console.log(`[PROXY FORWARD] ${req.method} ${req.url} -> ${apiBaseUrl}`);
-      },
-      proxyRes: (proxyRes, req) => {
-        console.log(`[PROXY RESPONSE] ${proxyRes.statusCode} for ${req.method} ${req.url}`);
-      },
         console.error('[SSR] API proxy error:', err.message);
       },
     },
