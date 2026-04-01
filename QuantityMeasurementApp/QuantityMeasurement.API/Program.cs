@@ -133,11 +133,9 @@ var app = builder.Build();
 // Once this line runs , the pipeline begins forming. Everything from up ahead  that use app.Use... , app.Map... , app.Run... ,becomes part of the request pipeline in ASP.NET Core which is running on kestrel.
 
 // Swagger Middleware Componenet.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger(); // To expose the OpenAPi json endpoint , something like this /swagger/v1/swagger.json
-    app.UseSwaggerUI(); // To expose the UI( basically serves the interactive swagger ui webpage in the browser when the endpoint is hit ( for current case which is the localhost port)) , something like this /swagger/index.html
-}
+
+app.UseSwagger(); // To expose the OpenAPi json endpoint , something like this /swagger/v1/swagger.json
+app.UseSwaggerUI(); // To expose the UI( basically serves the interactive swagger ui webpage in the browser when the endpoint is hit ( for current case which is the localhost port)) , something like this /swagger/index.html
 
 app.UseGlobalException();
 
