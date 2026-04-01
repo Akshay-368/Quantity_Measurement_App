@@ -7,7 +7,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiBase = '/api';
+  // private apiBase = '/api'; as this is causing https://quantity-frontend.onrender.com/api/... when ssr proxy layer is not hit and is served by expres or sdn a static site
+  private apiBase = 'https://quantity-backend.onrender.com/api';
 
   constructor(
     private http: HttpClient,
