@@ -12,7 +12,7 @@ providedIn:'root'
 
 export class HistoryService{
 
-private api='/api/history';
+private api = 'https://quantity-backend.onrender.com/api/history';
 
 constructor(
 
